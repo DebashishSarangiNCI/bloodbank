@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from .models import *
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
+from blood_app.library1 import history_view,myorder,allorder,viewuser()
 
 # Create your views here.
 def Home(request):
@@ -93,9 +94,7 @@ def Change_Password(request):
 
 
 def view_user(request):
-    data = UserProfile.objects.all()
-    d = {'data':data}
-    return render(request,'view_user.html',d)
+    return HttpResponse(viewuser(request))
 
 def edit_profile(request,pid):
     data = UserProfile.objects.get(id=pid)
@@ -223,9 +222,8 @@ def admin_home(request):
     return render(request,'admin_home.html',d)
 
 def history(request):
-    user = UserProfile.objects.get(user=request.user)
-    data = Blood_Donation.objects.filter(user=user)
-    return render(request, "history.html", {'data':data})
+    return HttpResponse(history_view(request))
+    
 
 def pay_now(request, pid):
     total = 2000
@@ -241,14 +239,6 @@ def pay_now(request, pid):
         return redirect("my_order")
     return render(request, "payment2.html",{'total':total})
 
-def my_order(request):
-    user = UserProfile.objects.get(user=request.user)
-    data = Order.objects.filter(user=user)
-    return render(request, "my_order.html",{'data':data})
-
-def all_order(request):
-    data = Order.objects.filter()
-    return render(request, "all_order.html",{'data':data})
 
 def delete_order(request, pid):
     data = Order.objects.get(id=pid)
@@ -273,3 +263,9 @@ def change_order_status(request,pid):
         data.save()
     messages.success(request, "Order Status changed successfully")
     return redirect('all_order')
+    
+def my_order(request):
+    return HttpResponse(myorder(request))
+    
+def all_order(request):
+    return HttpResponse(allorder(request))
