@@ -51,3 +51,6 @@ urlpatterns = [
     path('delete_order/<int:pid>', delete_order, name='delete_order'),
     path('delete_user/<int:pid>', delete_user, name='delete_user'),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+   urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
