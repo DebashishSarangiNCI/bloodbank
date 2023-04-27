@@ -1,0 +1,10 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/environment/Blood_Bank
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+  AfterInstall:
+    - location: scripts/after_install.sh
