@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from .models import *
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from blood_app.library1 import history_view,myorder,allorder,viewuser()
+from blood_app.library1 import history_view,myorder,allorder,viewuser
 
 # Create your views here.
 def Home(request):
