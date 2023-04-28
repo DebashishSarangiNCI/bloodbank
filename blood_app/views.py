@@ -1,3 +1,4 @@
+# Import necessary modules and classes
 from ast import Or
 from email import message
 import imp
@@ -9,9 +10,9 @@ from django.contrib.auth import authenticate, login, logout
 from .models import *
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from blood_app.library1 import history_view,myorder,allorder,viewuser
+from blood_app.library1 import history_view, myorder, allorder, viewuser
 
-# Create your views here.
+# Define views
 def Home(request):
     return render(request,'carousel.html')
 
@@ -25,36 +26,55 @@ def Gallery(request):
     return render(request,'gallery.html')
 
 def Login_User(request):
+    # Check if request is POST
     if request.method == "POST":
+        # Get username and password from form data
         u = request.POST['uname']
         p = request.POST['pwd']
+        # Authenticate user
         user = authenticate(username=u, password=p)
+        # Initialize sign variable
         sign = ""
+        # Check if user is not staff and authentication is successful
         if not user.is_staff and user:
+            # Log in user and add success message
             login(request, user)
             messages.success(request, "Logged in Successfully")
             return redirect('home')
         else:
+            # Add error message
             messages.success(request, "Invalid user")
+    # Render login page
     return render(request, 'login.html')
 
 def admin_login(request):
+    # Check if request is POST
     if request.method == "POST":
+        # Get username and password from form data
         u = request.POST['uname']
         p = request.POST['pwd']
+        # Authenticate user
         user = authenticate(username=u, password=p)
+        # Initialize sign variable
         sign = ""
+        # Check if user is staff and authentication is successful
         if user.is_staff:
+            # Log in user and add success message
             login(request, user)
             messages.success(request, "Logged in Successfully")
             return redirect('admin_home')
         else:
+            # Add error message
             messages.success(request, "Invalid user")
+    # Render admin login page
     return render(request, 'admin_login.html')
 
 def Signup_User(request):
+    # Get all categories
     cat = Category.objects.all()
+    # Check if request is POST
     if request.method == 'POST':
+        # Get all user data from form data
         f = request.POST['fname']
         l = request.POST['lname']
         u = request.POST['uname']
@@ -65,14 +85,19 @@ def Signup_User(request):
         add = request.POST['add']
         group = request.POST['group']
         im = request.FILES['image']
+        # Get category object
         cat = Category.objects.get(id=group)
+        # Create user and user profile objects
         user = User.objects.create_user(email=e, username=u, password=p, first_name=f,last_name=l)
         UserProfile.objects.create(user=user,contact=con,address=add,image=im,dob=d, blood_group=cat)
+        # Add success message and redirect to login page
         messages.success(request, "Registration Successful")
         return redirect('login')
+    # Render registration page
     return render(request,'register.html', {'cat':cat})
 
 def Logout(request):
+    # Log out user and redirect to home page
     logout(request)
     return redirect('home')
 
@@ -92,6 +117,8 @@ def Change_Password(request):
         return redirect('home')
     return render(request,'change_password.html')
 
+
+#defining views
 
 def view_user(request):
     return HttpResponse(viewuser(request))
@@ -132,6 +159,8 @@ def edit_profile(request,pid):
 def profile(request):
     pro = UserProfile.objects.get(user=request.user)
     return render(request, "profile.html", {'pro':pro})
+
+#defining catagory
 
 def add_category(request):
     if request.method == 'POST':
